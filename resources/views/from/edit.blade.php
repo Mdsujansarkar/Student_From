@@ -19,24 +19,23 @@
       </ul>
    </div>
 @endif
-@if(Session::has('message'))
-<p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
-@endif
         <div class="row align-items-center">
-            <a href="{{URL::to('/table/one') }}">Management</a>
             <div class="col-md-8 offset-md-2">
-                <form action="{{ route('from.one') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('from.update', $from->id) }}" method="post" enctype="multipart/form-data">
+
                   @csrf
+           
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" name="name" placeholder="Enter Name">
+                        <input type="text" class="form-control" id="exampleFormControlInput1" name="name" value="{{$from ->name}}">
                     </div>
                     <div class="mb-3">
                         <label for="exampleFormControlTextarea1" class="form-label">Description</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" name="description" rows="3"></textarea>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" name="description" rows="3">{{$from->description}}</textarea>
                     </div>
                     <div class="mb-3">
                         <label for="formFile" class="form-label">Image</label>
+                        <img src="{{ asset('from/one/'.$from->image)}}" alt="" height="60px" width="60px"><br />
                         <input class="form-control" type="file" name="image" id="formFile">
                     </div>
                     <div class="mb-3">

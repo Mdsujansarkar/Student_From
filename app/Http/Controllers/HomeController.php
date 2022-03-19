@@ -60,9 +60,10 @@ class HomeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        //
+        $froms = From::select('id','name','description','image')->paginate(10);
+        return view('from.table', ['froms' => $froms]);
     }
 
     /**
@@ -73,7 +74,10 @@ class HomeController extends Controller
      */
     public function edit($id)
     {
-        //
+        $from = From::findOrfail($id);
+        return view('from.edit',[
+            'from' =>$from,
+        ]);
     }
 
     /**
@@ -85,7 +89,24 @@ class HomeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $from = From::findOrFail($id);
+        $request->validate([
+            'name'        => 'required|string',
+            'description' => 'required|string',
+          ]);
+          $input = $request->all();
+          if($request->hasFile('image'))
+          {
+              $image = $request->file('image');
+              $direactory = 'from/one/';
+              $imageName = date('Ymd')."-".$image->getClientOriginalName();
+              $image->move($direactory,$imageName);
+              $input['image'] = "$imageName";
+          } else{
+              unset($input['image']);
+          }
+          $from->update($input);
+          return redirect('/table/one');
     }
 
     /**
@@ -96,6 +117,9 @@ class HomeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $from = From::findOrFail($id);
+        $from->delete();
+        return redirect('/table/one');
+
     }
 }
